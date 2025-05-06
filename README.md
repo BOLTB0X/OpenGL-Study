@@ -90,7 +90,7 @@
    
    - OpenGL의 상태 정보를 저장하며, OpenGL 함수 호출 시 **Context**가 사용됨
 
-   <br/>
+   ---
 
 2. **Vertex** && **Fragment**
 
@@ -108,7 +108,7 @@
       
       래스터화 후 개별 픽셀에 적용되는 데이터로, 최종 화면에 출력되는 색상 결정
 
-      <br/>
+      ---
 
 3. **VAO** , **VBO** , **EBO**
 
@@ -136,7 +136,7 @@
    
       삼각형을 효율적으로 그리기 위한 인덱스 버퍼
 
-      <br/>
+      ---
 
 4. **Shader**
 
@@ -150,11 +150,9 @@
    
       *픽셀 단위로 색상을 결정*
 
-## Study
+## Tutorial
 
-- [In Xcode](https://github.com/BOLTB0X/OpenGL-Study/tree/main/XcodeVer)
-
-- [In Visual Studio](https://github.com/BOLTB0X/OpenGL-Study/tree/main/VisualStudioVer)
+- [Get Started](https://github.com/BOLTB0X/OpenGL-Study/tree/main/VisualStudioVer)
 
 ## 참고
 
