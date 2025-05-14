@@ -4,6 +4,9 @@
 
 ## OpenGL
 
+<details>
+<summary> OpenGL 이란?</summary>
+
 > OpenGL is mainly considered an API (Application Programming Interface) that provides us with a large set of functions that we can use to manipulate graphics and images
 
 <br/>
@@ -31,9 +34,16 @@
 
 - GPU를 활용하여 빠른 그래픽 연산 수행
 
+---
+
+</details>
+
 ## Intro
 
-### 동작 원리
+<details>
+<summary> OpenGL 은 어떻게 동작되는 가? </summary>
+
+### 돌아가는 방식
 
 - 직접 실행되는 **Library** 가 아니라 그래픽 드라이버를 통해 GPU와 상호작용하는 **API**
 
@@ -44,6 +54,7 @@
       > Collection of functions, pre-compiled routines or reusable components of code
    
       이미 구현된 코드 모음
+
       - 재사용 가능한 코드 묶음
 
       - 함수, 클래스, 모듈 등의 집합
@@ -82,7 +93,10 @@
 
 4. 프레임버퍼 -> 화면 출력
 
-### 주요 개념
+</details>
+
+<details>
+<summary> 기본 구성 </summary>
 
 1. **Context**
 
@@ -149,6 +163,52 @@
    - *Fragment Shader* 
    
       *픽셀 단위로 색상을 결정*
+
+   ---
+
+</details>
+
+
+<details>
+<summary> 렌더링 파이프라인 </summary>
+
+```
+[CPU 코드]
+   ↓
+[정점 데이터 (VBO)]
+   ↓ 설명
+[정점 구조 (VAO)]
+   ↓ 전달
+[Vertex Shader]
+   ↓
+[도형 조립]
+   ↓
+[Rasterizer]
+   ↓
+[Fragment Shader]
+   ↓
+[Framebuffer (결과)]
+```
+
+1. CPU(C++)에서 정점 데이터를 준비하고 VBO에 넣음
+
+2. **VAO**로 정점 속성 포맷을 정의
+
+3. **GPU**에서 **Vertex Shader** 실행(각 정점마다 위치 계산)
+
+4. **Primitive Assembly(도형 조립)** – 삼각형 등의 기본 도형 생성
+
+5. **Rasterization** – 삼각형 -> 픽셀로 분해 (fragment)
+
+6. **Fragment Shader** 실행(픽셀 색상 결정)
+
+7. 화면(FrameBuffer)에 출력
+
+자세한 것은 [렌더링 파이프라인 TODO]() 참조
+
+</details>
+
+
 
 ## Tutorial
 
