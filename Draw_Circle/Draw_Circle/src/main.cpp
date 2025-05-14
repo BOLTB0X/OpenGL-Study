@@ -2,6 +2,7 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
 
 #include <iostream>
 #include <vector>
@@ -98,7 +99,8 @@ int main(void)
 	int numSegments = 100;
 	float radius = 0.5f;
 
-	for (int i = 0; i <= numSegments; ++i) {
+	for (int i = 0; i <= numSegments; ++i)
+	{
 		float angle = 2.0f * M_PI * i / numSegments;
 		float x = radius * cos(angle);
 		float y = radius * sin(angle);

@@ -71,7 +71,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ExternalIncludePath>C:\OpenGL\glad\include;$(ExternalIncludePath)</ExternalIncludePath>
+    <ExternalIncludePath>C:\OpenGL\glad\include</ExternalIncludePath>
     <LibraryPath>C:\OpenGL\glad\include;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
