@@ -254,3 +254,9 @@
 - [티스토리-꽉퓨타의 SW 이야기(OpenGL - 윈도우에 개발환경 구축하기 (GLFW, GLAD 사용))](https://kwak-story.tistory.com/3)
 
 - [Velog-tejava7177.log([OpenGL] Xcode에서 OpenGL)](https://velog.io/@tejava7177/OpenGL-Xcode%EC%97%90%EC%84%9C-OpenGL)
+
+- [쉬어가는 옹달샘-오픈지엘 GLSL 쉐이더 적용](https://springpool.tistory.com/entry/OpenGL-%EC%98%A4%ED%94%88%EC%A7%80%EC%97%98-GLSL-%EC%89%90%EC%9D%B4%EB%8D%94-%EC%A0%81%EC%9A%A9)
+
+- [velog.io.@keea-OpenGL - 원을 그려보자 1](https://velog.io/@keea/OpenGL-%EC%9B%90%EC%9D%84-%EA%B7%B8%EB%A0%A4%EB%B3%B4%EC%9E%90-1)
+
+- [사슴벌레- 3개의 구가 1개의 구 중심으로 공전 예제10](https://blog.naver.com/bluefallsky/140117834637)
