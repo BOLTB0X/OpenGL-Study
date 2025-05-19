@@ -142,6 +142,10 @@
     <ClInclude Include="lib\Sphere.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="glsl\outline.fs" />
+    <None Include="glsl\outline.vs" />
+    <None Include="glsl\toon_shading.fs" />
+    <None Include="glsl\vertex_shader.vs" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

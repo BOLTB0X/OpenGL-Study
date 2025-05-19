@@ -38,5 +38,17 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="glsl\vertex_shader.vs">
+      <Filter>소스 파일</Filter>
+    </None>
+    <None Include="glsl\toon_shading.fs">
+      <Filter>소스 파일</Filter>
+    </None>
+    <None Include="glsl\outline.fs">
+      <Filter>소스 파일</Filter>
+    </None>
+    <None Include="glsl\outline.vs">
+      <Filter>소스 파일</Filter>
+    </None>
   </ItemGroup>
 </Project>

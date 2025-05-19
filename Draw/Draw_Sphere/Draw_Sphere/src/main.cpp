@@ -12,6 +12,10 @@
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
+glm::vec3 lightPos = glm::vec3(3.0f, 3.0f, 10.0f);
+glm::vec3 viewPos = glm::vec3(0.0f, 0.0f, 3.0f);
+glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
 
@@ -52,11 +56,12 @@ int main(void)
 	Sphere sphere(1.0f, 50, 50);
 
 	// Shader 셋업
-	Shader shader("glsl/vertex_shader.vs", "glsl/fragment_shader.fs");
+	Shader sphereShader("glsl/vertex_shader.vs", "glsl/toon_shading.fs");
+	Shader outlineShader("glsl/outline.vs", "glsl/outline.fs");
 
 	// 투영, 뷰, 모델 매트릭스 설정
 	glm::mat4 model = glm::mat4(1.0f);
-	glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -3.0f));
+	glm::mat4 view = glm::lookAt(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
 
 	// Render Loop
@@ -70,23 +75,24 @@ int main(void)
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		shader.use();
-		shader.setMat4("model", model);
-		shader.setMat4("view", view);
-		shader.setMat4("projection", projection);
+		// 1. 윤곽선
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_FRONT);
 
-		shader.setVec3("lightPos", 1.2f, 1.0f, 2.0f);
-		shader.setVec3("viewPos", 0.0f, 0.0f, 3.0f);
-		shader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
-		shader.setVec3("objectColor", 1.0f, 0.5f, 0.3f);
+		glm::mat4 modelOutline = glm::scale(model, glm::vec3(1.05f));
+		sphere.draw(outlineShader, modelOutline, view, projection);
 
-		sphere.draw();
+		// 2. 구
+		glCullFace(GL_BACK);
+		sphere.draw(sphereShader, model, view, projection, lightPos, viewPos, lightColor);
+		// ===================================================
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
 
-	shader.~Shader();
+	sphereShader.~Shader();
+	outlineShader.~Shader();
 	sphere.~Sphere();
 
 	glfwTerminate();

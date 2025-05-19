@@ -17,8 +17,39 @@ Sphere::~Sphere()
     glDeleteBuffers(1, &EBO);
 }
 // -------------------------------------------
-void Sphere::draw(void) const
+void Sphere::draw(Shader& shader,
+				  const glm::mat4& model,
+				  const glm::mat4& view,
+				  const glm::mat4& projection) const
 {
+	shader.use();
+	shader.setMat4("model", model);
+	shader.setMat4("view", view);
+	shader.setMat4("projection", projection);
+
+	glBindVertexArray(VAO);
+	glDrawElements(GL_TRIANGLES, static_cast<unsigned int>(indices.size()), GL_UNSIGNED_INT, 0);
+}
+// -------------------------------------------
+void Sphere::draw(Shader& shader,
+				const glm::mat4& model,
+				const glm::mat4& view,
+				const glm::mat4& projection,
+				const glm::vec3& lightPos,
+				const glm::vec3& viewPos,
+				const glm::vec3& lightColor) const
+{
+	shader.use();
+
+	shader.setMat4("model", model);
+	shader.setMat4("view", view);
+	shader.setMat4("projection", projection);
+
+	shader.setVec3("lightPos", lightPos);
+	shader.setVec3("viewPos", viewPos);
+	shader.setVec3("lightColor", lightColor);
+	shader.setVec3("objectColor", objectColor);
+
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, static_cast<unsigned int>(indices.size()), GL_UNSIGNED_INT, 0);
 }
