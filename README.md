@@ -215,12 +215,17 @@
     <tr>
       <td style="text-align:center; vertical-align:middle;">
         <p align="center">
-        <img src="https://github.com/BOLTB0X/OpenGL-Study/blob/main/Img/%EC%9B%90%EA%B7%B8%EB%A6%AC%EA%B8%B0.png?raw=true" alt="Example Image" width="70%"/>
+        <img src="https://github.com/BOLTB0X/OpenGL-Study/blob/main/Img/%EC%9B%90%EA%B7%B8%EB%A6%AC%EA%B8%B0.png?raw=true" alt="Example Image" width="60%"/>
         </p>
       </td>
       <td style="text-align:center; vertical-align:middle;">
         <p align="center">
-        <img src="https://github.com/BOLTB0X/OpenGL-Study/blob/main/Img/%EA%B5%AC%EA%B7%B8%EB%A6%AC%EA%B8%B0.png?raw=true" alt="Example Image" width="70%"/>
+        <img src="https://github.com/BOLTB0X/OpenGL-Study/blob/main/Img/%EA%B5%AC%EA%B7%B8%EB%A6%AC%EA%B8%B0.png?raw=true" alt="Example Image" width="60%"/>
+        </p>
+      </td>
+      <td style="text-align:center; vertical-align:middle;">
+        <p align="center">
+        <img src="https://github.com/BOLTB0X/OpenGL-Study/blob/main/Img/%ED%88%B0%EC%84%B8%EC%9D%B4%EB%94%A93.png?raw=true" alt="Example Image" width="60%"/>
         </p>
       </td>
     </tr>
@@ -235,9 +240,20 @@
       Sphere
       </p>
       </td>
+      <td style="text-align:center; font-size:14px; font-weight:bold;">
+      <p align="center">
+      Toon Shading
+      </p>
+      </td>
     </tr>
   </table>
 </p>
+
+## Study
+
+- [Space](https://github.com/BOLTB0X/Metal-API/blob/main/OpenGL-Tutorial-Metal/StudyMd/Space.md)
+
+- [3D 카메라와 투영]()
 
 ## Tutorial
 
