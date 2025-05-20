@@ -75,9 +75,9 @@ for (int i = 0; i <= numSegments; ++i)
 
 </details>
 
-## Sphere
+## [Sphere](https://github.com/BOLTB0X/OpenGL-Study/blob/main/Draw/Draw_Sphere/Draw_Sphere/src/Sphere.cpp)
 
-> **위도(latitude)** 와 **경도(longitude)**를 기준으로 좌표를 계산해 삼각형을 연결
+> **위도(latitude)** 와 **경도(longitude)** 를 기준으로 좌표를 계산해 삼각형을 연결
 
 <p align="center">
   <table style="width:100%; text-align:center;">
@@ -87,11 +87,21 @@ for (int i = 0; i <= numSegments; ++i)
         <img src="https://github.com/BOLTB0X/OpenGL-Study/blob/main/Img/%EA%B5%AC%EA%B7%B8%EB%A6%AC%EA%B8%B0.png?raw=true" alt="Example Image" width="70%"/>
         </p>
       </td>
+      <td style="text-align:center; vertical-align:middle;">
+        <p align="center">
+        <img src="https://github.com/BOLTB0X/OpenGL-Study/blob/main/Img/%EA%B5%AC%EA%B7%B8%EB%A6%AC%EA%B8%B02.png?raw=true" alt="Example Image" width="70%"/>
+        </p>
+      </td>
     </tr>
     <tr>
       <td style="text-align:center; font-size:14px; font-weight:bold;">
       <p align="center">
       Sphere
+      </p>
+      </td>
+            <td style="text-align:center; font-size:14px; font-weight:bold;">
+      <p align="center">
+      Phong
       </p>
       </td>
     </tr>
@@ -117,9 +127,9 @@ for (int i = 0; i <= numSegments; ++i)
 
 - **삼각형 구성** : 
 
-   - stack : 위도 방향 단면
+   - *stack* : 위도 방향 단면
 
-   - sector : 경도 방향 단면
+   - *sector* : 경도 방향 단면
 
    - 각 스택/섹터 사이의 사각형을 두 개의 삼각형으로 분할
 
@@ -139,7 +149,7 @@ for (int i = 0; i <= numSegments; ++i)
 <summary> 구 생성 </summary>
 
 <p align="center">
-    <img src="https://static.thenounproject.com/png/283045-200.png" alt="Example Image" width="70%">
+    <img src="https://static.thenounproject.com/png/283045-200.png" alt="Example Image" width="50%">
     <br/>
     이미지 출처: thenounproject.com
 </p>
@@ -276,6 +286,8 @@ for (int i = 0; i <= numSegments; ++i)
    ```
    위도 줄1:  ●---●---●---●
               |  /|  /|  /|
+              | / | / | / |
+              |/  |/  |/  |
    위도 줄2:  ●---●---●---●
    ```
 
@@ -316,7 +328,7 @@ for (int i = 0; i <= numSegments; ++i)
 2. `normalize`
 
    ```cpp
-        // 3
+      // 3
 
 		glm::vec3 normal = glm::normalize(pos); // 4
 
@@ -335,5 +347,31 @@ for (int i = 0; i <= numSegments; ++i)
 
    ---
 
+</details>
+
+<details>
+<summary> Lighting 적용 </summary>
+
+```cpp
+// Ambient
+float ambientStrength = 0.1;
+vec3 ambient = ambientStrength * lightColor;
+
+// Diffuse
+vec3 norm = normalize(Normal);
+vec3 lightDir = normalize(lightPos - FragPos);
+float diff = max(dot(norm, lightDir), 0.0);
+vec3 diffuse = diff * lightColor;
+
+// Specular
+float specularStrength = 0.5;
+vec3 viewDir = normalize(viewPos - FragPos);
+vec3 reflectDir = reflect(-lightDir, norm);
+float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
+vec3 specular = specularStrength * spec * lightColor;
+
+vec3 result = (ambient + diffuse + specular) * objectColor;
+FragColor = vec4(result, 1.0);
+```
 
 </details>
