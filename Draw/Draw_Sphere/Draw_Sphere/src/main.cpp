@@ -56,8 +56,19 @@ int main(void)
 	Sphere sphere(1.0f, 50, 50);
 
 	// Shader 셋업
+	//Shader sphereShader("glsl/vertex_shader.vs", "glsl/fragment_shader.fs");
+
+	// Gouraud Shading
+	//Shader sphereShader("glsl/gouraud.vs", "glsl/gouraud.fs");
+
+	// Flat Shading
+	//Shader sphereShader("glsl/flat.vs", "glsl/flat.fs");
+
+	// Toon Shading
+	// ===================================================
 	Shader sphereShader("glsl/vertex_shader.vs", "glsl/toon_shading.fs");
 	Shader outlineShader("glsl/outline.vs", "glsl/outline.fs");
+	// ===================================================
 
 	// 투영, 뷰, 모델 매트릭스 설정
 	glm::mat4 model = glm::mat4(1.0f);
@@ -75,9 +86,16 @@ int main(void)
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		// Phong , Gouraud , Flat Shading
+		//sphere.draw(sphereShader, model, view, projection, lightPos, viewPos, lightColor);
+
+
+		// Toon Shading
+		// ===================================================
 		// 1. 윤곽선
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_FRONT);
+		glEnable(GL_DEPTH_TEST);
 
 		glm::mat4 modelOutline = glm::scale(model, glm::vec3(1.05f));
 		sphere.draw(outlineShader, modelOutline, view, projection);

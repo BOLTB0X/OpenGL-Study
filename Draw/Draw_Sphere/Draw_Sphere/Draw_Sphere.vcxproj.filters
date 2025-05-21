@@ -50,5 +50,8 @@
     <None Include="glsl\outline.vs">
       <Filter>소스 파일</Filter>
     </None>
+    <None Include="glsl\fragment_shader.fs">
+      <Filter>소스 파일</Filter>
+    </None>
   </ItemGroup>
 </Project>

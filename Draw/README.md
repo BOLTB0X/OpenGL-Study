@@ -375,3 +375,374 @@ FragColor = vec4(result, 1.0);
 ```
 
 </details>
+
+## Toon Shading
+
+<p align="center">
+  <table style="width:100%; text-align:center;">
+    <tr>
+      <td style="text-align:center; vertical-align:middle;">
+        <p align="center">
+        <img src="https://github.com/BOLTB0X/OpenGL-Study/blob/main/Img/%ED%88%B0%EC%84%B8%EC%9D%B4%EB%94%A9.png?raw=true" alt="Example Image" width="60%"/>
+        </p>
+      </td>
+      <td style="text-align:center; vertical-align:middle;">
+        <p align="center">
+        <img src="https://github.com/BOLTB0X/OpenGL-Study/blob/main/Img/%ED%88%B0%EC%84%B8%EC%9D%B4%EB%94%A92.png?raw=true" alt="Example Image" width="60%"/>
+        </p>
+      </td>
+      <td style="text-align:center; vertical-align:middle;">
+        <p align="center">
+        <img src="https://github.com/BOLTB0X/OpenGL-Study/blob/main/Img/%ED%88%B0%EC%84%B8%EC%9D%B4%EB%94%A93.png?raw=true" alt="Example Image" width="60%"/>
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <td style="text-align:center; font-size:14px; font-weight:bold;">
+      <p align="center">
+      Toon 1
+      </p>
+      </td>
+      <td style="text-align:center; font-size:14px; font-weight:bold;">
+      <p align="center">
+      Toon 2
+      </p>
+      </td>
+      <td style="text-align:center; font-size:14px; font-weight:bold;">
+      <p align="center">
+      Toon 3
+      </p>
+      </td>
+    </tr>
+  </table>
+</p>
+
+### ideal
+
+1. **개념**
+
+   >  만화나 애니메이션 스타일의 비주얼을 구현하기 위한 셰이딩 기법
+
+   - 일반적인 조명 모델처럼 부드럽게 색이 변화하지 않고, 밝기 단계를 구간별로 나눠서 색상을 뚜렷하게 표현
+
+   - 비연속 조명 : 밝기(`intensity`)를 일정 구간으로 나누어 색을 결정
+
+   - 만화 느낌 : 셀 애니메이션 스타일, 게임·애니메이션에 많이 사용
+
+   ---
+
+2. **세부 포인트** : 
+
+   - 광원 방향과 normal 벡터 사이의 내적(= `intensity`) 계산
+
+   - 밝기를 기준으로 단계 구분 (ex. `if (intensity > 0.8)`...)
+
+   - 해당 구간의 색상으로 출력
+
+   - *윤곽선을 그리기 위해 별도 패스 사용*
+
+   ---
+
+### Implement
+
+<details>
+<summary> Toon fragment Shader </summary>
+
+```cpp
+float diff = max(dot(norm, lightDir), 0.0);
+
+vec3 intensity = vec3(0.0, 0.0, 0.0);
+if (diff > 0.95)
+   intensity = vec3(1.0, 0.5, 0.5);
+else if (diff > 0.5)
+   intensity = vec3(0.6, 0.3, 0.3);
+else if (diff > 0.25)
+   intensity = vec3(0.4, 0.2, 0.2);
+else
+   intensity = vec3(0.1, 0.1, 0.1);
+```
+
+1. `diff` : 구 의 `norm` 과 `lightDir` 내적 값
+
+2. `if - else if - else` 으로 `intensity` 값을 정함
+
+---
+
+</details>
+
+<details>
+<summary> Outline Pass </summary>
+
+2번 그려야함
+
+1. `Sphere` 클래스에 `draw(...)`
+
+   ```cpp
+   // Outline 용
+   void Sphere::draw(Shader& shader,
+				  const glm::mat4& model,
+				  const glm::mat4& view,
+				  const glm::mat4& projection) const
+   {
+	   shader.use();
+	   shader.setMat4("model", model);
+	   shader.setMat4("view", view);
+	   shader.setMat4("projection", projection);
+
+	   glBindVertexArray(VAO);
+	   glDrawElements(GL_TRIANGLES, static_cast<unsigned int>(indices.size()), GL_UNSIGNED_INT, 0);
+   }
+   ```
+
+   ```cpp
+   void Sphere::draw(Shader& shader,
+				const glm::mat4& model,
+				const glm::mat4& view,
+				const glm::mat4& projection,
+				const glm::vec3& lightPos,
+				const glm::vec3& viewPos,
+				const glm::vec3& lightColor) const
+   {
+	   shader.use();
+
+	   shader.setMat4("model", model);
+	   shader.setMat4("view", view);
+	   shader.setMat4("projection", projection);
+
+	   shader.setVec3("lightPos", lightPos);
+	   shader.setVec3("viewPos", viewPos);
+	   shader.setVec3("lightColor", lightColor);
+	   shader.setVec3("objectColor", objectColor);
+
+	   glBindVertexArray(VAO);
+	   glDrawElements(GL_TRIANGLES, static_cast<unsigned int>(indices.size()), GL_UNSIGNED_INT, 0);
+   }
+   ```
+
+   ---
+
+2. `main`
+
+   ```cpp
+   //1. 윤곽선
+   glEnable(GL_CULL_FACE); // 
+   glCullFace(GL_FRONT);  // 
+   glEnable(GL_DEPTH_TEST);
+
+	glm::mat4 modelOutline = glm::scale(model, glm::vec3(1.05f));
+	sphere.draw(outlineShader, modelOutline, view, projection);
+
+	// 2. 구
+	glCullFace(GL_BACK);
+	sphere.draw(sphereShader, model, view, projection, lightPos, viewPos, lightColor);
+   ```
+
+   1. 윤곽선이 원래 구보다 뒤에 있어야 정상적으로 윤곽선만 남게 해야함
+
+      - `glEnable(GL_CULL_FACE)` , `glCullFace(GL_FRONT)` : 앞쪽면이 아닌 모든 면들은 폐기
+
+      - 살짝 확대한 상태로 렌더링
+
+
+   2. 그런 다음 구 렌더링
+
+   ---
+
+---
+
+</details>
+
+## Basic Shading
+
+<p align="center">
+  <table style="width:100%; text-align:center;">
+    <tr>
+      <td style="text-align:center; vertical-align:middle;">
+        <p align="center">
+        <img src="https://github.com/BOLTB0X/OpenGL-Study/blob/main/Img/%ED%94%8C%EB%9E%AB%EC%84%B8%EC%9D%B4%EB%94%A9.png?raw=true" alt="Example Image" width="70%"/>
+        </p>
+      </td>
+      <td style="text-align:center; vertical-align:middle;">
+        <p align="center">
+        <img src="https://github.com/BOLTB0X/OpenGL-Study/blob/main/Img/%EA%B3%A0%EB%9D%BC%EC%9A%B0%EB%93%9C%EC%84%B8%EC%9D%B4%EB%94%A9.png?raw=true" alt="Example Image" width="60%"/>
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <td style="text-align:center; font-size:14px; font-weight:bold;">
+      <p align="center">
+      Flat
+      </p>
+      </td>
+            <td style="text-align:center; font-size:14px; font-weight:bold;">
+      <p align="center">
+      Gouraud
+      </p>
+      </td>
+    </tr>
+  </table>
+</p>
+
+### ideal
+
+1. **개념**
+
+   - **Flat**
+
+      - 삼각형 하나당 하나의 색상을 계산해서, 그 색으로 해당 삼각형 전체에 색을 넣음
+
+      - 면 단위 조명이라고도 함
+
+      - Lighting 연산은 보통 삼각형의 첫 번째 정점(`normal`)을 기준으로 수행
+
+      ---
+
+   - **Gouroud**
+
+      - Vertex에서 Lighting 연산 후, 그 색상을 **보간해서 픽셀에 적용**
+
+      - 노멀 보간이 아니라 Lighting 색상 보간
+
+      - 부드러운 느낌이 있지만 **하이라이트는 흐려짐**
+
+      - Phong 보다 계산량 적지만 디테일은 덜함
+
+      ---
+
+   ---
+
+2. **세부 포인트** :
+
+   - **Flat**
+
+      - vertex shader : `position`만 넘김
+
+      - fragment shader: 조명 계산 안 함
+
+      - `flat` qualifier를 사용해 lighting 값을 Vertex에서만 계산하고 fragment에 전달
+
+      ---
+
+   - **Gouroud**
+
+      - vertex shader : Lighting 연산
+
+      - fragment shader: 색 보정
+
+      ---
+
+   ---
+
+### Implement
+
+<details>
+<summary> Flat Shader </summary>
+
+- **flat.vs**
+
+   ```cpp
+   #version 330 core
+   layout(location = 0) in vec3 aPos;
+   layout(location = 1) in vec3 aNormal;
+
+   out flat vec3 Normal;
+   out vec3 FragPos;
+
+   uniform mat4 model;
+   uniform mat4 view;
+   uniform mat4 projection;
+
+   void main(void)
+   {
+      FragPos = vec3(model * vec4(aPos, 1.0));
+      Normal = mat3(transpose(inverse(model))) * aNormal;
+      gl_Position = projection * view * vec4(FragPos, 1.0);
+   }
+   ```
+
+   ---
+
+- **flat.fs**
+
+   ```cpp
+   #version 330 core
+   in flat vec3 Normal;
+   in vec3 FragPos;
+
+   out vec4 FragColor;
+
+   uniform vec3 lightPos;
+   uniform vec3 viewPos;
+   uniform vec3 lightColor;
+   uniform vec3 objectColor;
+
+   void main(void)
+   {
+	   vec3 norm = normalize(Normal);
+	   vec3 lightDir = normalize(lightPos - FragPos);
+      float diff = max(dot(norm, lightDir), 0.0);
+
+      vec3 diffuse = diff * lightColor;
+      vec3 result = diffuse * objectColor;
+      FragColor = vec4(result, 1.0);
+   }
+   ```
+
+---
+
+</details>
+
+<details>
+<summary> Gouraud Shader </summary>
+
+- **gouraud.vs**
+
+   ```cpp
+   #version 330 core
+   layout(location = 0) in vec3 aPos;
+   layout(location = 1) in vec3 aNormal;
+
+   out vec3 VertexColor;
+
+   uniform mat4 model;
+   uniform mat4 view;
+   uniform mat4 projection;
+   uniform vec3 lightPos;
+   uniform vec3 lightColor;
+   uniform vec3 objectColor;
+
+   void main(void)
+   {
+	   vec3 FragPos = vec3(model * vec4(aPos, 1.0));
+	   vec3 norm = normalize(mat3(transpose(inverse(model))) * aNormal);
+	   vec3 lightDir = normalize(lightPos - FragPos);
+      float diff = max(dot(norm, lightDir), 0.0);
+
+      vec3 diffuse = diff * lightColor;
+      vec3 result = diffuse * objectColor;
+      VertexColor = result;
+
+      gl_Position = projection * view * vec4(FragPos, 1.0);
+   }
+   ```
+
+   ---
+
+- **gouraud.fs**
+
+   ```cpp
+   #version 330 core
+   in vec3 VertexColor;
+   out vec4 FragColor;
+
+   void main(void)
+   {
+      FragColor = vec4(VertexColor, 1.0);
+   }
+   ```
+
+   ---
+
+---
+
+</details>

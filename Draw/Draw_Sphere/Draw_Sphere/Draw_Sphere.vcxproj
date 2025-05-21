@@ -142,6 +142,7 @@
     <ClInclude Include="lib\Sphere.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="glsl\fragment_shader.fs" />
     <None Include="glsl\outline.fs" />
     <None Include="glsl\outline.vs" />
     <None Include="glsl\toon_shading.fs" />
