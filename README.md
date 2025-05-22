@@ -253,7 +253,7 @@
 
 - [Space](https://github.com/BOLTB0X/Metal-API/blob/main/OpenGL-Tutorial-Metal/StudyMd/Space.md)
 
-- [3D 카메라와 투영]()
+- [3D 카메라와 투영](https://github.com/BOLTB0X/OpenGL-Study/blob/main/Study/3D.md)
 
 ## Tutorial
 
@@ -276,3 +276,10 @@
 - [velog.io.@keea-OpenGL - 원을 그려보자 1](https://velog.io/@keea/OpenGL-%EC%9B%90%EC%9D%84-%EA%B7%B8%EB%A0%A4%EB%B3%B4%EC%9E%90-1)
 
 - [사슴벌레- 3개의 구가 1개의 구 중심으로 공전 예제10](https://blog.naver.com/bluefallsky/140117834637)
+
+- [goodprogramer - 주전자 그리기](https://goodprogramer.tistory.com/117)
+
+- [casual-effects](https://casual-effects.com/data/)
+
+- [공허의 유산 - gl_position](https://learn-and-give.tistory.com/31)
+
