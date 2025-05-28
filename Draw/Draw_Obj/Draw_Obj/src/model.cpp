@@ -6,7 +6,7 @@
 
 // 생성자
 Model::Model(const std::string& path)
-{
+{    
     loadModel(path);
 }
 // ----------------------------------------------------------
@@ -68,7 +68,6 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
     std::vector<Texture> textures;
-    Material material;
 
     // Vertex
     for (unsigned int i = 0; i < mesh->mNumVertices; i++)
@@ -121,42 +120,34 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
     }
 
     // Material
-  
-    aiMaterial* mat = scene->mMaterials[mesh->mMaterialIndex];
+    aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 
-    std::vector<Texture> diffuseMaps = loadMaterialTextures(mat, aiTextureType_DIFFUSE, TextureType::DIFFUSE);
+    std::vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
     textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
 
-    std::vector<Texture> specularMaps = loadMaterialTextures(mat, aiTextureType_SPECULAR, TextureType::SPECULAR);
+    std::vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
     textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
 
-    std::vector<Texture> normalMaps = loadMaterialTextures(mat, aiTextureType_HEIGHT, TextureType::NORMAL);
+    std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_NORMALS, "texture_normal");
     textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
 
-    std::vector<Texture> heightMaps = loadMaterialTextures(mat, aiTextureType_AMBIENT, TextureType::AO);
+    std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
     textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
 
-    material = loadMaterial(mat);
+    std::vector<Texture> aoMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_ao");
+    textures.insert(textures.end(), aoMaps.begin(), aoMaps.end());
 
-    material.hasDiffuseMap = !diffuseMaps.empty();
-    material.hasSpecularMap = !specularMaps.empty();
-    material.hasNormalMap = !normalMaps.empty();
-    material.hasAOMap = !heightMaps.empty();
-    
-    return Mesh(vertices, indices, textures, material);
+    return Mesh(vertices, indices, textures/*, material*/);
 }
 // ----------------------------------------------------------
 // 텍스처 처리
-std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType type, TextureType typeEnum)
+ std::vector<Texture> Model::loadMaterialTextures(aiMaterial * mat, aiTextureType type, std::string typeName)
 {
-    std::vector<Texture> textures;
-
+     std::vector<Texture> textures;
     for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
     {
         aiString str;
         mat->GetTexture(type, i, &str);
-
-        std::string filename = directory + "/" + std::string(str.C_Str());
 
         bool skip = false;
         for (unsigned int j = 0; j < textures_loaded.size(); j++)
@@ -168,57 +159,30 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType 
                 break;
             }
         }
-
         if (!skip)
         {
             Texture texture;
-            texture.id = TextureFromFile(filename.c_str());
-            texture.type = typeEnum;
-            texture.path = filename;
+            texture.id = TextureFromFile(str.C_Str(), this->directory);
+            texture.type = typeName;
+            texture.path = str.C_Str();
             textures.push_back(texture);
             textures_loaded.push_back(texture);
         }
     }
-
     return textures;
 }
 // ----------------------------------------------------------
-Material Model::loadMaterial(aiMaterial* mat)
+unsigned int TextureFromFile(const char* path, std::string& directory)
 {
-    Material mtl;
+    std::string filename = std::string(path);
+    filename = directory + '/' + filename;
 
-    aiColor3D color(0.0f, 0.0f, 0.0f);
-    float value;
-
-    if (AI_SUCCESS == mat->Get(AI_MATKEY_COLOR_AMBIENT, color))
-        mtl.ambientColor = glm::vec3(color.r, color.g, color.b);
-
-    if (AI_SUCCESS == mat->Get(AI_MATKEY_COLOR_DIFFUSE, color))
-        mtl.diffuseColor = glm::vec3(color.r, color.g, color.b);
-
-    if (AI_SUCCESS == mat->Get(AI_MATKEY_COLOR_SPECULAR, color))
-        mtl.specularColor = glm::vec3(color.r, color.g, color.b);
-
-    if (AI_SUCCESS == mat->Get(AI_MATKEY_SHININESS, value))
-        mtl.shininess = value;
-
-    if (AI_SUCCESS == mat->Get(AI_MATKEY_OPACITY, value))
-        mtl.alpha = value;
-
-    if (AI_SUCCESS == mat->Get(AI_MATKEY_SHADING_MODEL, value))
-        mtl.illum = static_cast<int>(value);
-
-    return mtl;
-}
-// ----------------------------------------------------------
-unsigned int TextureFromFile(const char* path)
-{
     unsigned int textureID;
     glGenTextures(1, &textureID);
 
     int width, height, nrComponents;
-    stbi_set_flip_vertically_on_load(true);
-    unsigned char* data = stbi_load(path, &width, &height, &nrComponents, 0);
+    
+    unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
 
     if (data)
     {
@@ -244,14 +208,14 @@ unsigned int TextureFromFile(const char* path)
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-        stbi_image_free(data);
     }
     else
     {
-        std::cout << "Texture failed to load at path: " << path << std::endl;
-        stbi_image_free(data);
+        std::cout << "Texture failed to load at path: " << filename.c_str() << std::endl;
+        std::cout << "Failed to load image at path: " << filename.c_str() << std::endl;
+        std::cout << "stb error: " << stbi_failure_reason() << std::endl;
     }
+    stbi_image_free(data);
 
     return textureID;
 }

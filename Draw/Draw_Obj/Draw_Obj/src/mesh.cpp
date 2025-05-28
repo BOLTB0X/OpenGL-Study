@@ -4,9 +4,9 @@
 // 생성자
 Mesh::Mesh(std::vector<Vertex> vertices,
     std::vector<unsigned int> indices,
-    std::vector<Texture> textures,
-    Material material)
-    : vertices(vertices), indices(indices), textures(textures), material(material)
+    std::vector<Texture> textures/*,
+    Material material*/)
+    : vertices(vertices), indices(indices), textures(textures)//, material(material)
 {
     setupMesh();
 }
@@ -19,48 +19,27 @@ void Mesh::Draw(Shader& shader)
     unsigned int specularNr = 0;
     unsigned int normalNr = 0;
     unsigned int aoNr = 0;
+    //unsigned int metallicNr = 0;
+    //unsigned int roughnessNr = 0;
 
     for (unsigned int i = 0; i < textures.size(); i++)
     {
         glActiveTexture(GL_TEXTURE0 + i); // 활성화
         std::string number;
-        std::string name;
+        std::string name = textures[i].type;
 
-        switch (textures[i].type) {
-        case TextureType::DIFFUSE:
-            name = "texture_diffuse";
+        if (name == "texture_diffuse")
             number = std::to_string(diffuseNr++);
-            break;
-        case TextureType::SPECULAR:
-            name = "texture_specular";
+        else if (name == "texture_specular")
             number = std::to_string(specularNr++);
-            break;
-        case TextureType::NORMAL:
-            name = "texture_normal";
+        else if (name == "texture_normal")
             number = std::to_string(normalNr++);
-            break;
-        case TextureType::AO:
-            name = "texture_ao";
+        else if (name == "texture_ao")
             number = std::to_string(aoNr++);
-            break;
-        }
-        //glUniform1i(glGetUniformLocation(shader.ID, (name + number).c_str()), i);
+
         shader.setInt((name + number).c_str(), i);
         glBindTexture(GL_TEXTURE_2D, textures[i].id);
     }
-
-    // 재질 속성 설정 (Ka, Kd, Ks 등)
-    shader.setVec3("material.ambientColor", material.ambientColor);
-    shader.setVec3("material.diffuseColor", material.diffuseColor);
-    shader.setVec3("material.specularColor", material.specularColor);
-    shader.setFloat("material.shininess", material.shininess);
-    shader.setFloat("material.alpha", material.alpha);
-    shader.setInt("material.illum", material.illum);
-
-    shader.setBool("material.hasDiffuseMap", material.hasDiffuseMap);
-    shader.setBool("material.hasSpecularMap", material.hasSpecularMap);
-    shader.setBool("material.hasNormalMap", material.hasNormalMap);
-    shader.setBool("material.hasAOMap", material.hasAOMap);
 
     // 그리기
     glBindVertexArray(VAO);

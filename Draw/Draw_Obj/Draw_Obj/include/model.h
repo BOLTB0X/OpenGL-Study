@@ -16,7 +16,7 @@
 #include <shader.h>
 #include "mesh.h"
 
-unsigned int TextureFromFile(const char* path);
+unsigned int TextureFromFile(const char* path, std::string& directory);
 
 class Model {
 public:
@@ -33,8 +33,7 @@ private:
     void loadModel(const std::string& path);
     void processNode(aiNode* node, const aiScene* scene);
     Mesh processMesh(aiMesh* mesh, const aiScene* scene);
-    std::vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, TextureType myType);
-    Material loadMaterial(aiMaterial* mat);
+    std::vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
     // ------------------------------------
 };
 // ----------------------------
