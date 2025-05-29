@@ -137,7 +137,10 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
     std::vector<Texture> aoMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_ao");
     textures.insert(textures.end(), aoMaps.begin(), aoMaps.end());
 
-    return Mesh(vertices, indices, textures/*, material*/);
+    std::vector<Texture> occMaps = loadMaterialTextures(material, aiTextureType_UNKNOWN, "texture_occlusion");
+    textures.insert(textures.end(), occMaps.begin(), occMaps.end());
+
+    return Mesh(vertices, indices, textures);
 }
 // ----------------------------------------------------------
 // 텍스처 처리

@@ -215,17 +215,12 @@
     <tr>
       <td style="text-align:center; vertical-align:middle;">
         <p align="center">
-        <img src="https://github.com/BOLTB0X/OpenGL-Study/blob/main/Img/%EC%9B%90%EA%B7%B8%EB%A6%AC%EA%B8%B0.png?raw=true" alt="Example Image" width="60%"/>
+        <img src="https://github.com/BOLTB0X/OpenGL-Study/blob/main/Img/%EC%9B%90%EA%B7%B8%EB%A6%AC%EA%B8%B0.png?raw=true" alt="Example Image" width="70%"/>
         </p>
       </td>
       <td style="text-align:center; vertical-align:middle;">
         <p align="center">
-        <img src="https://github.com/BOLTB0X/OpenGL-Study/blob/main/Img/%EA%B5%AC%EA%B7%B8%EB%A6%AC%EA%B8%B0.png?raw=true" alt="Example Image" width="60%"/>
-        </p>
-      </td>
-      <td style="text-align:center; vertical-align:middle;">
-        <p align="center">
-        <img src="https://github.com/BOLTB0X/OpenGL-Study/blob/main/Img/%ED%88%B0%EC%84%B8%EC%9D%B4%EB%94%A93.png?raw=true" alt="Example Image" width="60%"/>
+        <img src="https://github.com/BOLTB0X/OpenGL-Study/blob/main/Img/%EA%B5%AC%EA%B7%B8%EB%A6%AC%EA%B8%B0.png?raw=true" alt="Example Image" width="70%"/>
         </p>
       </td>
     </tr>
@@ -240,9 +235,62 @@
       Sphere
       </p>
       </td>
+    </tr>
+  </table>
+</p>
+
+<p align="center">
+  <table style="width:100%; text-align:center;">
+    <tr>
+      <td style="text-align:center; vertical-align:middle;">
+        <p align="center">
+        <img src="https://github.com/BOLTB0X/OpenGL-Study/blob/main/Img/%ED%94%8C%EB%9E%AB%EC%84%B8%EC%9D%B4%EB%94%A9.png?raw=true" alt="Example Image" width="60%"/>
+        </p>
+      </td>
+      <td style="text-align:center; vertical-align:middle;">
+        <p align="center">
+        <img src="https://github.com/BOLTB0X/OpenGL-Study/blob/main/Img/%EA%B3%A0%EB%9D%BC%EC%9A%B0%EB%93%9C%EC%84%B8%EC%9D%B4%EB%94%A9.png?raw=true" alt="Example Image" width="60%"/>
+        </p>
+      </td>
+      <td style="text-align:center; vertical-align:middle;">
+        <p align="center">
+        <img src="https://github.com/BOLTB0X/OpenGL-Study/blob/main/Img/%ED%88%B0%EC%84%B8%EC%9D%B4%EB%94%A93.png?raw=true" alt="Example Image" width="60%"/>
+        </p>
+      </td>
+    </tr>
+    <tr>
       <td style="text-align:center; font-size:14px; font-weight:bold;">
       <p align="center">
-      Toon Shading
+      Flat 
+      </p>
+      </td>
+      <td style="text-align:center; font-size:14px; font-weight:bold;">
+      <p align="center">
+      Gorouding
+      </p>
+      </td>
+      <td style="text-align:center; font-size:14px; font-weight:bold;">
+      <p align="center">
+      Toon
+      </p>
+      </td>
+    </tr>
+  </table>
+</p>
+
+<p align="center">
+  <table style="width:100%; text-align:center;">
+    <tr>
+      <td style="text-align:center; vertical-align:middle;">
+        <p align="center">
+        <img src="https://github.com/BOLTB0X/OpenGL-Study/blob/main/Img/%EC%A3%BC%EC%A0%84%EC%9E%90%EA%B7%B8%EB%A6%AC%EA%B8%B0.png?raw=true" alt="Example Image" width="50%"/>
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <td style="text-align:center; font-size:14px; font-weight:bold;">
+      <p align="center">
+      Circle
       </p>
       </td>
     </tr>

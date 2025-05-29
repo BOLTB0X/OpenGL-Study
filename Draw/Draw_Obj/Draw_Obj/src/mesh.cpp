@@ -19,8 +19,7 @@ void Mesh::Draw(Shader& shader)
     unsigned int specularNr = 0;
     unsigned int normalNr = 0;
     unsigned int aoNr = 0;
-    //unsigned int metallicNr = 0;
-    //unsigned int roughnessNr = 0;
+    unsigned int occNr = 0;
 
     for (unsigned int i = 0; i < textures.size(); i++)
     {
@@ -36,6 +35,8 @@ void Mesh::Draw(Shader& shader)
             number = std::to_string(normalNr++);
         else if (name == "texture_ao")
             number = std::to_string(aoNr++);
+        else if (name == "texture_occlusion")
+            number = std::to_string(occNr++);
 
         shader.setInt((name + number).c_str(), i);
         glBindTexture(GL_TEXTURE_2D, textures[i].id);

@@ -4,6 +4,9 @@
 
 ## Draw Circle
 
+<details>
+<summary> 보기/닫기 </summary>
+
 > 중심을 기준으로 삼각형을 여러 개 그려 원을 근사 (삼각 팬 방식)
 
 <p align="center">
@@ -75,7 +78,15 @@ for (int i = 0; i <= numSegments; ++i)
 
 </details>
 
+</details>
+
+
+
+
 ## [Sphere](https://github.com/BOLTB0X/OpenGL-Study/blob/main/Draw/Draw_Sphere/Draw_Sphere/src/Sphere.cpp)
+
+<details>
+<summary> 보기/닫기 </summary>
 
 > **위도(latitude)** 와 **경도(longitude)** 를 기준으로 좌표를 계산해 삼각형을 연결
 
@@ -376,7 +387,12 @@ FragColor = vec4(result, 1.0);
 
 </details>
 
+</details>
+
 ## Toon Shading
+
+<details>
+<summary> 보기/닫기 </summary>
 
 <p align="center">
   <table style="width:100%; text-align:center;">
@@ -552,7 +568,12 @@ else
 
 </details>
 
+</details>
+
 ## Basic Shading
+
+<details>
+<summary> 보기/닫기 </summary>
 
 <p align="center">
   <table style="width:100%; text-align:center;">
@@ -746,3 +767,51 @@ else
 ---
 
 </details>
+
+</details>
+
+## [Draw Teapot](https://github.com/BOLTB0X/OpenGL-Study/tree/main/Draw/Draw_Teapot)
+
+<p align="center">
+  <table style="width:100%; text-align:center;">
+    <tr>
+      <td style="text-align:center; vertical-align:middle;">
+        <p align="center">
+        <img src="https://github.com/BOLTB0X/OpenGL-Study/blob/main/Img/%EC%A3%BC%EC%A0%84%EC%9E%90%EA%B7%B8%EB%A6%AC%EA%B8%B0.png?raw=true" alt="Example Image" width="70%"/>
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <td style="text-align:center; font-size:14px; font-weight:bold;">
+      <p align="center">
+      Teapot
+      </p>
+      </td>
+    </tr>
+  </table>
+</p>
+
+TODO
+
+## [Draw Obj](https://github.com/BOLTB0X/OpenGL-Study/tree/main/Draw/Draw_Obj)
+
+<p align="center">
+  <table style="width:100%; text-align:center;">
+    <tr>
+      <td style="text-align:center; vertical-align:middle;">
+        <p align="center">
+        <img src="https://github.com/BOLTB0X/OpenGL-Study/blob/main/Img/%EB%B6%80%EC%B2%982.png?raw=true" alt="Example Image" width="70%"/>
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <td style="text-align:center; font-size:14px; font-weight:bold;">
+      <p align="center">
+      Buddha
+      </p>
+      </td>
+    </tr>
+  </table>
+</p>
+
+TODO
