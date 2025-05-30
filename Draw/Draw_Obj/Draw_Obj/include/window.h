@@ -17,9 +17,10 @@ public:
 	void SetDeltaTime(float delta);
 	void InitCallbacks(); // 콜백 등록
 	// ----------------------------------------------------------------------
+	unsigned int width, height;
+	// ----------------------------------------------------------------------
 private:
 	GLFWwindow* window;
-	unsigned int width, height;
 	const char* title;
 	Camera* camera;
 	// mouse input

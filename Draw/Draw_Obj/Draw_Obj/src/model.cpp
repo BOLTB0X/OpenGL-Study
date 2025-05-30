@@ -10,8 +10,35 @@ Model::Model(const std::string& path)
     loadModel(path);
 }
 // ----------------------------------------------------------
+// main 모델 렌더러
+void Model::Render(Shader& shader, glm::mat4 projection, glm::mat4 view, glm::mat4 model, glm::vec3 position, glm::vec3 lightPos)
+{
+    shader.use();
+    shader.setMat4("projection", projection);
+    shader.setMat4("view", view);
+    shader.setMat4("model", model);
+    shader.setVec3("viewPos", position);
+    shader.setVec3("lightPos", lightPos);
+
+    glCullFace(GL_BACK);
+    draw(shader);
+}
+// ----------------------------------------------------------
+// 모델 외곽선 렌더러
+void Model::Render(Shader& shader, glm::mat4 projection, glm::mat4 view, glm::mat4 model, float thickness)
+{
+    shader.use();
+    shader.setMat4("projection", projection);
+    shader.setMat4("view", view);
+    shader.setMat4("model", model);
+    shader.setFloat("thickness", 0.005f);
+    
+    glCullFace(GL_FRONT);
+    draw(shader);
+}
+// ----------------------------------------------------------
 // 렌더링
-void Model::Draw(Shader& shader)
+void Model::draw(Shader& shader)
 {
 
     for (auto& mesh : meshes) {
@@ -21,13 +48,13 @@ void Model::Draw(Shader& shader)
 // ----------------------------------------------------------
 glm::vec3 Model::GetCenterPosition() const {
     glm::vec3 minPos(FLT_MAX), maxPos(-FLT_MAX);
-for (const auto& mesh : meshes) {
-    for (const auto& vertex : mesh.vertices) {
-        minPos = glm::min(minPos, vertex.Position);
-        maxPos = glm::max(maxPos, vertex.Position);
+    for (const auto& mesh : meshes) {
+        for (const auto& vertex : mesh.vertices) {
+            minPos = glm::min(minPos, vertex.Position);
+            maxPos = glm::max(maxPos, vertex.Position);
+        }
     }
-}
-return (minPos + maxPos) / 2.0f;
+    return (minPos + maxPos) / 2.0f;
 }
 // assimp 활용 모델 로드 메서드
 void Model::loadModel(const std::string& path)

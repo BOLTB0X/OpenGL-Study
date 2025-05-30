@@ -283,14 +283,24 @@
     <tr>
       <td style="text-align:center; vertical-align:middle;">
         <p align="center">
-        <img src="https://github.com/BOLTB0X/OpenGL-Study/blob/main/Img/%EC%A3%BC%EC%A0%84%EC%9E%90%EA%B7%B8%EB%A6%AC%EA%B8%B0.png?raw=true" alt="Example Image" width="50%"/>
+        <img src="https://github.com/BOLTB0X/OpenGL-Study/blob/main/Img/Amoghasiddhi.gif?raw=true" alt="Example Image" width="70%"/>
+        </p>
+      </td>
+      <td style="text-align:center; vertical-align:middle;">
+        <p align="center">
+        <img src="https://github.com/BOLTB0X/OpenGL-Study/blob/main/Img/Amoghasiddhi-light.gif?raw=true" alt="Example Image" width="70%"/>
         </p>
       </td>
     </tr>
     <tr>
       <td style="text-align:center; font-size:14px; font-weight:bold;">
       <p align="center">
-      Circle
+      Amoghasiddhi
+      </p>
+      </td>
+      <td style="text-align:center; font-size:14px; font-weight:bold;">
+      <p align="center">
+      Amoghasiddhi Toon
       </p>
       </td>
     </tr>
@@ -331,3 +341,4 @@
 
 - [공허의 유산 - gl_position](https://learn-and-give.tistory.com/31)
 
+- [블로그 참고 - OpenGL Toon Shader Example](https://xdpixel.com/opengl-toon-shader-example/)

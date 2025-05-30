@@ -22,6 +22,21 @@
     <None Include="glsl\buddha.vs">
       <Filter>소스 파일</Filter>
     </None>
+    <None Include="glsl\outline.vs">
+      <Filter>소스 파일</Filter>
+    </None>
+    <None Include="glsl\outline.fs">
+      <Filter>소스 파일</Filter>
+    </None>
+    <None Include="glsl\toon.fs">
+      <Filter>소스 파일</Filter>
+    </None>
+    <None Include="glsl\lightSpot.vs">
+      <Filter>소스 파일</Filter>
+    </None>
+    <None Include="glsl\lightSpot.fs">
+      <Filter>소스 파일</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -45,6 +60,12 @@
     <ClCompile Include="src\stb_lmage.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="src\sphere.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\renderer.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\camera.h">
@@ -57,6 +78,12 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="include\model.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="include\sphere.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="include\renderer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

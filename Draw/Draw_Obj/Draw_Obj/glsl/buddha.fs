@@ -33,7 +33,6 @@ void main()
     // Ambient Occlusion
     float ao = texture(texture_occlusion1, TexCoords).r;
 
-    // 결과 조합
     vec3 ambient = texture(texture_diffuse1, TexCoords).rgb * ao;
     vec3 result = ambient + diffuse + specular;
 
