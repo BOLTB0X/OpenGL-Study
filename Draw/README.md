@@ -801,4 +801,321 @@ else
   </table>
 </p>
 
-TODO
+### ideal
+
+1. **개념**
+
+   - [assimp](https://github.com/assimp/assimp) 를 이용하여 Model 로딩
+
+   - 오브젝트의 구조가 **트리** 구조 이므로 [Mesh](https://github.com/BOLTB0X/OpenGL-Study/blob/main/Draw/Draw_Obj/Draw_Obj/include/mesh.h) , [Model](https://github.com/BOLTB0X/OpenGL-Study/blob/main/Draw/Draw_Obj/Draw_Obj/include/model.h) 클래스 내에서 이에 맞춰 구현
+
+   - 만약 OpenGL 상 좌표 `(0, 0, 0)` 에 있지 않을 경우도 있어 정중앙으로 이동
+
+   - 일반 조명, 툰 세이딩 적용
+
+   ---
+
+2. **세부 포인트** :
+
+   - Model, Mesh 등 [learn OpenGL](https://learnopengl.com/Model-Loading/Model) 오픈 소스 활용
+
+   - `Model` 클래스 내 맴버함수 `GetCenterPosition` 을 활용하여 모델 중앙으로 이동
+
+   - `lightSpot` 을 `(0, 0, 0)` 중심으로 `(x, 0, z)` 으로 회전 시켜 조명 효과 적용
+
+   ---
+
+### Implement
+
+<details>
+<summary> Renderer </summary>
+
+`Renderer` 클래스 내에 렌더링 할 객체를 모아둠
+
+```cpp
+#ifndef RENDERER_H
+#define RENDERER_H
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+#include "window.h"
+#include "camera.h"
+#include "shader.h"
+#include "model.h"
+#include "sphere.h"
+
+class Renderer {
+public:
+    Renderer(Window* window, Camera* camera);
+    ~Renderer();
+    // -------------------------------------
+    void Init();
+    void Render(float deltaTime);
+    // -------------------------------------
+private:
+    Window* window;
+    Camera* camera;
+    // -------------------------------------
+    Shader outlineShader;
+    Shader amoghasiddhiShader;
+    Shader spotShader;
+    // -------------------------------------
+    Model amoghasiddhi;
+    Sphere lightSpot;
+    // -------------------------------------
+    float elapsedTime = 0.0f;
+    float radius = 0.5f;
+    float speed = 0.7f;
+    // -------------------------------------
+};
+
+#endif
+```
+
+```cpp
+#include "renderer.h"
+#include <stb_image.h>
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+// 생성자
+Renderer::Renderer(Window* window, Camera* camera) :
+    window(window), 
+    camera(camera),
+    outlineShader("glsl/outline.vs", "glsl/outline.fs"),
+    amoghasiddhiShader("glsl/buddha.vs", "glsl/toon.fs"),
+    spotShader("glsl/lightSpot.vs", "glsl/lightSpot.fs"),
+    amoghasiddhi("resources/amoghasiddhi/mia_031182_Amoghasiddhi_64k.obj"),
+    lightSpot(1.0f, 20, 20)
+{}
+// ----------------------------------------------------------------------
+Renderer::~Renderer()
+{
+    outlineShader.~Shader();
+    amoghasiddhiShader.~Shader();
+    spotShader.~Shader();
+}
+// ----------------------------------------------------------------------
+void Renderer::Init()
+{
+    stbi_set_flip_vertically_on_load(true);
+}
+// ----------------------------------------------------------------------
+void Renderer::Render(float deltaTime)
+{
+    elapsedTime += deltaTime;
+
+    // 배경
+    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glEnable(GL_CULL_FACE);
+
+    glm::mat4 projection = glm::perspective(glm::radians(camera->Zoom), (float)window->width / window->height, 0.1f, 100.0f);
+    glm::mat4 view = camera->GetViewMatrix();
+    glm::mat4 model = glm::mat4(1.0f);
+    glm::vec3 lightPos = glm::vec3(sin(elapsedTime * speed) * radius, 0.0f, cos(elapsedTime * speed) * radius);
+    model = glm::translate(model, -amoghasiddhi.GetCenterPosition());
+
+    // outline
+    amoghasiddhi.Render(outlineShader, projection, view, model, 0.005f);
+    // main
+    amoghasiddhi.Render(amoghasiddhiShader, projection, view, model, camera->Position, lightPos);
+    // lightSpot
+    lightSpot.Render(spotShader, view, projection, lightPos);
+}
+// ----------------------------------------------------------------------
+```
+
+`main` 에선 `Renderer` 호출
+
+```cpp
+// 렌더링 루프
+// -------------------------------------------
+float lastFrame = 0.0f;
+while (!glfwWindowShouldClose(window.GetGLFWWindow())) {
+   // 시간 계산
+   float currentFrame = static_cast<float>(glfwGetTime());
+   float deltaTime = currentFrame - lastFrame;
+   lastFrame = currentFrame;
+   window.SetDeltaTime(deltaTime);
+
+   // 입력 처리
+   window.ProcessInput();
+
+   // 렌더
+   renderer.Render(deltaTime);
+   
+   // 버퍼 교환 및 이벤트 폴링
+   glfwSwapBuffers(window.GetGLFWWindow());
+   glfwPollEvents();
+   // ---------------------------------------------------
+}
+// -------------------------------------------
+```
+
+</details>
+
+<details>
+<summary> glsl </summary>
+
+1. 퐁 라이트
+
+   ```cpp
+   #version 330 core
+   out vec4 FragColor;
+
+   in vec2 TexCoords;
+   in vec3 TangentFragPos;
+   in vec3 TangentLightPos;
+   in vec3 TangentViewPos;
+   in mat3 TBN;
+
+   uniform sampler2D texture_diffuse1;
+   uniform sampler2D texture_normal1;
+   uniform sampler2D texture_specular1;
+   uniform sampler2D texture_occlusion1;
+
+   void main()
+   {    
+      vec3 normal = texture(texture_normal1, TexCoords).rgb;
+      normal = normalize(normal * 2.0 - 1.0); 
+
+      // 광원, 뷰 벡터
+      vec3 lightDir = normalize(TangentLightPos - TangentFragPos);
+      vec3 viewDir = normalize(TangentViewPos - TangentFragPos);
+
+      // 디퓨즈
+      float diff = max(dot(lightDir, normal), 0.0);
+      vec3 diffuse = diff * texture(texture_diffuse1, TexCoords).rgb;
+
+      // 스페큘러
+      vec3 halfwayDir = normalize(lightDir + viewDir);
+      float spec = pow(max(dot(normal, halfwayDir), 0.0), 64.0);
+      vec3 specular = spec * texture(texture_specular1, TexCoords).rgb;
+
+      // Ambient Occlusion
+      float ao = texture(texture_occlusion1, TexCoords).r;
+
+      vec3 ambient = texture(texture_diffuse1, TexCoords).rgb * ao;
+      vec3 result = ambient + diffuse + specular;
+
+      FragColor = vec4(result, 1.0);
+   }
+   ```
+
+   ---
+
+2. 툰
+
+   메인 모델을 로딩 전 외곽선을 표현하기 위해 외곽선 색상으로 먼저 로딩
+
+   ```cpp
+   // in Renderer.cpp
+   // outline
+   amoghasiddhi.Render(outlineShader, projection, view, model, 0.005f);
+
+   // main
+   amoghasiddhi.Render(amoghasiddhiShader, projection, view, model, camera->Position, lightPos);
+   ```
+
+   ```cpp
+   // 모델 외곽선 렌더러
+   void Model::Render(Shader& shader, glm::mat4 projection, glm::mat4 view, glm::mat4 model, float thickness)
+   {
+      shader.use();
+      shader.setMat4("projection", projection);
+      shader.setMat4("view", view);
+      shader.setMat4("model", model);
+      shader.setFloat("thickness", 0.005f);
+    
+      glCullFace(GL_FRONT);
+      draw(shader);
+   }
+   ```
+
+   그런다음 다시 본 모델 로딩
+
+   ```cpp
+   // main 모델 렌더러
+   void Model::Render(Shader& shader, glm::mat4 projection, glm::mat4 view, glm::mat4 model, glm::vec3 position, glm::vec3 lightPos)
+   {
+      shader.use();
+      shader.setMat4("projection", projection);
+      shader.setMat4("view", view);
+      shader.setMat4("model", model);
+      shader.setVec3("viewPos", position);
+      shader.setVec3("lightPos", lightPos);
+
+      glCullFace(GL_BACK);
+      draw(shader);
+   }
+   ```
+
+   ```cpp
+   #version 330 core
+   out vec4 FragColor;
+
+   in vec2 TexCoords;
+   in vec3 TangentFragPos;
+   in vec3 TangentLightPos;
+   in vec3 TangentViewPos;
+   in mat3 TBN;
+
+   uniform sampler2D texture_diffuse1;
+   uniform sampler2D texture_normal1;
+   uniform sampler2D texture_specular1;
+   uniform sampler2D texture_occlusion1;
+
+   void main()
+   {
+      // 노멀 맵 및 정규화
+      vec3 normal = texture(texture_normal1, TexCoords).rgb;
+      normal = normalize(normal * 2.0 - 1.0); 
+
+      // 광원, 시점 방향
+      vec3 lightDir = normalize(TangentLightPos - TangentFragPos);
+      vec3 viewDir = normalize(TangentViewPos - TangentFragPos);
+
+      // 툰
+      float diff = max(dot(normal, lightDir), 0.0);
+      float toonDiffuse = 0.0;
+
+      if (diff > 0.95)
+         toonDiffuse = 1.0;
+      else if (diff > 0.5)
+         toonDiffuse = 0.6;
+      else if (diff > 0.25)
+         toonDiffuse = 0.3;
+      else
+         toonDiffuse = 0.1;
+
+      // 툰 하이라이트
+      vec3 halfwayDir = normalize(lightDir + viewDir);
+      float spec = pow(max(dot(normal, halfwayDir), 0.0), 64.0);
+      float toonSpecular = 0.0;
+
+      if (spec > 0.8)
+         toonSpecular = 1.0;
+      else if (spec > 0.3)
+         toonSpecular = 0.4;
+      else
+         toonSpecular = 0.0;
+
+      //ambient
+      vec3 color = texture(texture_diffuse1, TexCoords).rgb;
+      float ao = texture(texture_occlusion1, TexCoords).r;
+      vec3 ambient = color * ao * 0.2;
+
+      vec3 result = ambient + color * toonDiffuse + vec3(toonSpecular);
+      FragColor = vec4(result, 1.0);
+   }
+   ```
+
+   `toonDiffuse` 방식은 **구** 에서 참고
+
+
+</details>
