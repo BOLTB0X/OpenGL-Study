@@ -210,6 +210,8 @@
 
 ## Draw
 
+### 2D
+
 <p align="center">
   <table style="width:100%; text-align:center;">
     <tr>
@@ -238,6 +240,8 @@
     </tr>
   </table>
 </p>
+
+### 3D
 
 <p align="center">
   <table style="width:100%; text-align:center;">
@@ -277,6 +281,8 @@
     </tr>
   </table>
 </p>
+
+### Model
 
 <p align="center">
   <table style="width:100%; text-align:center;">
